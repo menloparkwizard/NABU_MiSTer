@@ -258,11 +258,16 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 ///////////////////////   CLOCKS   ///////////////////////////////
 
 wire clk_sys;
+wire clk_sdram;
+wire pll_locked;
+
 pll pll
 (
 	.refclk(CLK_50M),
 	.rst(0),
-	.outclk_0(clk_sys)
+	.outclk_0(clk_sdram), // ~86MHz
+	.outclk_1(clk_sys),   // ~43MHz
+	.locked(pll_locked)
 );
 
 wire reset = RESET | status[0] | buttons[1];
@@ -276,7 +281,7 @@ wire VSync;
 wire ce_pix;
 wire [7:0] video;
 
-mycore mycore
+nabu nabu
 (
 	.clk(clk_sys),
 	.reset(reset),
